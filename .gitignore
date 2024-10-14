@@ -1,0 +1,18 @@
+# Maven build directory
+/target/
+
+# IDE specific files
+.idea/
+*.iml
+
+# Eclipse specific files
+.settings/
+.classpath
+.project
+
+# VS code specific
+.vscode/
+
+# OS generated files
+.DS_Store
+Thumbs.db
