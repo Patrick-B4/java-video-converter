@@ -63,4 +63,26 @@ public class VideoConverter {
             }
     }
 
+
+    public static void convertDirectory(String directory, int crf){
+        try(Stream<Path> paths = Files.list(Paths.get(directory))){
+            paths.filter(Files::isRegularFile)
+            .map(Path::toString)
+            .filter(file -> file.endsWith(".webm") || file.endsWith(".mkv"))
+            .forEach(file -> convertToMp4(file, crf));
+        } catch (IOException e){
+            System.err.println("Error reading directory: " + e.getMessage());
+        }
+    }
+    public static void convertDirectoryAndSub(String directory, int crf){
+        try(Stream<Path> paths = Files.walk(Paths.get(directory))){
+            paths.filter(Files::isRegularFile)
+            .map(Path::toString)
+            .filter(file -> file.endsWith(".webm") || file.endsWith(".mkv"))
+            .forEach(file -> convertToMp4(file, crf));
+        } catch (IOException e){
+            System.err.println("Error reading directory: " + e.getMessage());
+        }
+    }
+
 }
