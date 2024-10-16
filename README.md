@@ -42,13 +42,13 @@ Before you begin, ensure you have the following installed on your machine:
     cd java-video-converter
     ```
 ### Building the Project
-    ```
+    
     mvn clean install
-    ```
+    
 ### Running the Application
-    ```
+    
     mvn javafx:run
-    ```
+    
 ## Usage Instructions
 1. When the application starts, select a file or directory using the provided buttons.
 2. Enter the desired CRF value for video quality (default is 17, lower values indicate higher quality).
