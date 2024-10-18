@@ -10,11 +10,15 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
 import java.io.File;
+import java.nio.file.Files;
+
+import java.nio.file.Paths;
 
 public class VideoConverterUI extends Application {
     private TextField pathField;
     private TextField crf;
     private CheckBox convertSubDirBox;
+    private CheckBox deleteCheckbox;
     private ProgressBar progressBar;
     private boolean isDirectory = false;
 
@@ -39,9 +43,12 @@ public class VideoConverterUI extends Application {
         selectDirectoryButton.setOnAction(e -> selectDirectory());
         convertButton.setOnAction(e -> performConversion());
 
+        deleteCheckbox = new CheckBox("Delete original files after conversion");
+
+
         // Layout
         VBox layout = new VBox();
-        layout.getChildren().addAll(pathField, selectButton, selectDirectoryButton, convertSubDirBox, new Label("CRF Value:"), crf, convertButton, progressBar);
+        layout.getChildren().addAll(pathField, selectButton, selectDirectoryButton, deleteCheckbox, convertSubDirBox, new Label("CRF Value:"), crf, convertButton, progressBar);
         Scene scene = new Scene(layout,400,250);
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -81,6 +88,10 @@ public class VideoConverterUI extends Application {
                         // Convert a single file
                         VideoConverter.convertToMp4(inputPath, crf);  
                     }
+
+                    if (deleteCheckbox.isSelected()) {
+                        deleteOriginalFile(inputPath);
+                    }
                 } catch (Exception e) {
                     showAlert("Error", "Error during conversion: " + e.getMessage());
                 }
@@ -106,6 +117,14 @@ public class VideoConverterUI extends Application {
         new Thread(task).start();  // Start the task in a separate thread
     }
 
+    private void deleteOriginalFile(String inputPath) {
+        try {
+            Files.deleteIfExists(Paths.get(inputPath));
+            System.out.println("Deleted original file: " + inputPath);
+        } catch (Exception e) {
+            System.err.println("Failed to delete original file: " + e.getMessage());
+        }
+    }
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);

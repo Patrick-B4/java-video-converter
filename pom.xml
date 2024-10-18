@@ -12,8 +12,10 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <javafx.version>23</javafx.version>
   </properties>
+
   <dependencies>
 
+    <!-- JUnit for testing -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -21,43 +23,48 @@
       <scope>test</scope>
     </dependency>
 
+    <!-- JavaCPP -->
     <dependency>
-        <groupId>org.bytedeco</groupId>
-        <artifactId>javacpp</artifactId>
-        <version>1.5.10</version>
+      <groupId>org.bytedeco</groupId>
+      <artifactId>javacpp</artifactId>
+      <version>1.5.10</version>
     </dependency>
 
+    <!-- JavaCV -->
     <dependency>
-        <groupId>org.bytedeco</groupId>
-        <artifactId>javacv</artifactId>
-        <version>1.5.10</version>
+      <groupId>org.bytedeco</groupId>
+      <artifactId>javacv</artifactId>
+      <version>1.5.10</version>
     </dependency>
 
-
+    <!-- FFmpeg -->
     <dependency>
-        <groupId>org.bytedeco</groupId>
-        <artifactId>ffmpeg</artifactId>
-        <version>6.1.1-1.5.10</version>
+      <groupId>org.bytedeco</groupId>
+      <artifactId>ffmpeg</artifactId>
+      <version>6.1.1-1.5.10</version>
     </dependency>
 
+    <!-- FFmpeg Platform -->
     <dependency>
       <groupId>org.bytedeco</groupId>
       <artifactId>ffmpeg-platform</artifactId>
       <version>6.1.1-1.5.10</version>
     </dependency>
 
+    <!-- JavaFX dependencies -->
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
       <version>${javafx.version}</version>
     </dependency>
+
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-fxml</artifactId>
       <version>${javafx.version}</version>
     </dependency>
 
-     <dependency>
+    <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-base</artifactId>
       <version>${javafx.version}</version>
@@ -69,39 +76,56 @@
       <version>${javafx.version}</version>
     </dependency>
 
-
   </dependencies>
 
-
   <build>
-      <plugins>
-          <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-compiler-plugin</artifactId>
-              <version>3.10.1</version> <!-- Ensure you use a compatible version -->
-              <configuration>
-                  <source>23</source> <!-- Specify Java version -->
-                  <target>23</target> <!-- Specify Java version -->
-              </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-maven-plugin</artifactId>
-            <version>0.0.5</version> <!-- Use the latest version -->
-            <executions>
-                <execution>
-                    <goals>
-                        <goal>run</goal>
-                    </goals>
-                </execution>
-            </executions>
-            <configuration>
-                <mainClass>com.patrick.App</mainClass>
-            </configuration>
+    <plugins>
+      <!-- Maven JAR Plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.2.0</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+              <mainClass>com.patrick.App</mainClass> <!-- Main class here -->
+            </manifest>
+          </archive>
+        </configuration>
       </plugin>
 
-      </plugins>
+      <!-- Maven Shade Plugin for bundling dependencies into a single JAR -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.2.4</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>com.patrick.App</mainClass> <!-- Main class here -->
+                </transformer>
+              </transformers>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- JavaFX Maven Plugin for running the app using `mvn javafx:run` -->
+      <plugin>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-maven-plugin</artifactId>
+        <version>0.0.8</version>
+        <configuration>
+          <mainClass>com.patrick.App</mainClass> <!-- Main class here -->
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
-
-
 </project>
