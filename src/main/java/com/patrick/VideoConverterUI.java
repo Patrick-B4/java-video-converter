@@ -11,7 +11,6 @@ import javafx.scene.layout.VBox;
 
 import java.io.File;
 import java.nio.file.Files;
-
 import java.nio.file.Paths;
 
 public class VideoConverterUI extends Application {
@@ -22,7 +21,7 @@ public class VideoConverterUI extends Application {
     private ProgressBar progressBar;
     private boolean isDirectory = false;
 
-    public void start(Stage primaryStage){
+    public void start(Stage primaryStage) {
         primaryStage.setTitle("Convert MKV and WEBM to MP4");
 
         pathField = new TextField();
@@ -37,7 +36,6 @@ public class VideoConverterUI extends Application {
         progressBar = new ProgressBar(0);
         progressBar.setVisible(false);
 
-
         // Event listeners for buttons
         selectButton.setOnAction(e -> selectFile());
         selectDirectoryButton.setOnAction(e -> selectDirectory());
@@ -45,18 +43,17 @@ public class VideoConverterUI extends Application {
 
         deleteCheckbox = new CheckBox("Delete original files after conversion");
 
-
         // Layout
         VBox layout = new VBox();
         layout.getChildren().addAll(pathField, selectButton, selectDirectoryButton, deleteCheckbox, convertSubDirBox, new Label("CRF Value:"), crf, convertButton, progressBar);
-        Scene scene = new Scene(layout,400,250);
+        Scene scene = new Scene(layout, 400, 250);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    private void performConversion(){
+    private void performConversion() {
         String inputPath = pathField.getText();
-        if (inputPath.isEmpty()){
+        if (inputPath.isEmpty()) {
             showAlert("Error", "Please select a file or directory.");
             return;
         }
@@ -70,7 +67,6 @@ public class VideoConverterUI extends Application {
         }
         boolean convertSubDir = convertSubDirBox.isSelected();
         progressBar.setVisible(true);
-        progressBar.setProgress(0);
 
         // Create a background task to handle the conversion process
         Task<Void> task = new Task<Void>() {
@@ -80,15 +76,16 @@ public class VideoConverterUI extends Application {
                     if (isDirectory) {
                         // Convert the directory or directory with subdirectories
                         if (convertSubDir) {
-                            VideoConverter.convertDirectoryAndSub(inputPath, crf);  
+                            VideoConverter.convertDirectoryAndSub(inputPath, crf);
                         } else {
-                            VideoConverter.convertDirectory(inputPath, crf);  
+                            VideoConverter.convertDirectory(inputPath, crf);
                         }
                     } else {
                         // Convert a single file
-                        VideoConverter.convertToMp4(inputPath, crf);  
+                        VideoConverter.convertToMp4(inputPath, crf);
                     }
 
+                    // Delete original file if the checkbox is selected
                     if (deleteCheckbox.isSelected()) {
                         deleteOriginalFile(inputPath);
                     }
@@ -113,8 +110,11 @@ public class VideoConverterUI extends Application {
             }
         };
 
+        // Bind progress bar to task progress
         progressBar.progressProperty().bind(task.progressProperty());
-        new Thread(task).start();  // Start the task in a separate thread
+
+        // Start the task in a separate thread
+        new Thread(task).start();
     }
 
     private void deleteOriginalFile(String inputPath) {
@@ -125,6 +125,7 @@ public class VideoConverterUI extends Application {
             System.err.println("Failed to delete original file: " + e.getMessage());
         }
     }
+
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -132,6 +133,7 @@ public class VideoConverterUI extends Application {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
     private void selectFile() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select File");
@@ -164,6 +166,4 @@ public class VideoConverterUI extends Application {
             convertSubDirBox.setDisable(false);  // Enable the subdirectory option for a directory
         }
     }
-
 }
-
